@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Corazoncito</title>
+  <style>
+    body {
+      background-color: #fff0f5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .heart {
+      width: 100px;
+      height: 90px;
+      position: relative;
+      background-color: red;
+      transform: rotate(-45deg) scale(1);
+      animation: heartbeat 1s infinite;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      width: 100px;
+      height: 90px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .heart::before {
+      top: -50px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 50px;
+      top: 0;
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: rotate(-45deg) scale(1);
+      }
+      25% {
+        transform: rotate(-45deg) scale(1.1);
+      }
+      50% {
+        transform: rotate(-45deg) scale(1);
+      }
+      75% {
+        transform: rotate(-45deg) scale(1.1);
+      }
+      100% {
+        transform: rotate(-45deg) scale(1);
+      }
+    }
+
+    .text {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #d10050;
+      font-weight: bold;
+      animation: fadeIn 1s ease-in-out;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .explode {
+      animation: explode 0.6s forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: rotate(-45deg) scale(2.6);
+        opacity: 1;
+      }
+      100% {
+        transform: rotate(-45deg) scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="heart" id="heart" onclick="beatMore()"></div>
+  <div class="text" id="loveText">Te amo</div>
+
+  <audio id="heartbeatSound" loop>
+    <source src="https://www.soundjay.com/human/heartbeat-01a.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <script>
+    let scale = 1;
+    let exploded = false;
+    let firstClick = true;
+
+    function beatMore() {
+      if (exploded) return;
+
+      const heart = document.getElementById('heart');
+      const loveText = document.getElementById('loveText');
+
+      // Detener la animación del latido en el primer clic
+      if (firstClick) {
+        heart.style.animation = 'none';
+        firstClick = false;
+        loveText.style.display = 'block';
+      }
+
+      // Aumentar el tamaño
+      scale += 0.1;
+      heart.style.transform = `rotate(-45deg) scale(${scale})`;
+
+      // Reproducir sonido
+      const audio = document.getElementById("heartbeatSound");
+      audio.play();
+
+      // Explosión si el corazón es muy grande
+      if (scale >= 2.6) {
+        heart.classList.add('explode');
+        exploded = true;
+        setTimeout(() => {
+          heart.style.display = 'none';
+          loveText.innerText = '¡Estalle mi corazon por amarte!';
+        }, 600);
+      }
+    }
+  </script>
+</body>
+</html>
